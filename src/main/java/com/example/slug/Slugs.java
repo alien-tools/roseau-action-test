@@ -38,6 +38,13 @@ public final class Slugs {
 	}
 
 	/**
+	 * Returns the slug of {@code input}, using {@code separator} between words.
+	 */
+	public static String slugify(@Nullable String input, char separator) {
+		return slugify(input).replace('-', separator);
+	}
+
+	/**
 	 * Returns the slug of {@code input}, after applying {@code filter} to each word.
 	 */
 	public static String slugify(@Nullable String input, SlugFilter filter) {
