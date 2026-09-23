@@ -60,7 +60,7 @@ public final class Slugs {
 	/**
 	 * Returns a slug for {@code input} that keeps emoji as their names. Not stable yet.
 	 */
-	@Experimental
+	@Experimental(since = "1.0.0")
 	public static String slugifyWithEmoji(@Nullable String input) {
 		return slugify(input == null ? null : input.replace("❤", " heart "));
 	}
