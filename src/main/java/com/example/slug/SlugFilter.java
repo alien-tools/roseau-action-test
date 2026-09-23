@@ -7,6 +7,10 @@ package com.example.slug;
 public interface SlugFilter {
 	String apply(String word);
 
+	static SlugFilter identity() {
+		return word -> word;
+	}
+
 	static SlugFilter dropping(String... stopWords) {
 		java.util.Set<String> words = java.util.Set.of(stopWords);
 		return word -> words.contains(word) ? "" : word;
