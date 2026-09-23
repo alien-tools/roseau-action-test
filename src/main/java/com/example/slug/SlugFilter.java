@@ -11,7 +11,7 @@ public interface SlugFilter {
 		return word -> word;
 	}
 
-	static SlugFilter dropping(String... stopWords) {
+	static SlugFilter stopWords(String... stopWords) {
 		java.util.Set<String> words = java.util.Set.of(stopWords);
 		return word -> words.contains(word) ? "" : word;
 	}
