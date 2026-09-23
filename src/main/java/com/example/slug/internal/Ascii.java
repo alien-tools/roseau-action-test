@@ -9,7 +9,7 @@ public final class Ascii {
 	private Ascii() {
 	}
 
-	public static String fold(String input) {
+	public static String foldToAscii(String input) {
 		return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
 	}
 }

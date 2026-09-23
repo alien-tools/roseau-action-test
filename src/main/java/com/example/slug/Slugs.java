@@ -45,7 +45,7 @@ public final class Slugs {
 			return "";
 		}
 		StringBuilder slug = new StringBuilder();
-		for (String word : Ascii.fold(input).toLowerCase().split("[^a-z0-9]+")) {
+		for (String word : Ascii.foldToAscii(input).toLowerCase().split("[^a-z0-9]+")) {
 			String filtered = filter.apply(word);
 			if (!filtered.isEmpty()) {
 				if (!slug.isEmpty()) {
@@ -58,10 +58,10 @@ public final class Slugs {
 	}
 
 	/**
-	 * Returns a slug for {@code input} that keeps emoji as their names. Not stable yet.
+	 * Returns a slug for {@code input} that keeps emoji as their names. Not stable yet: emoji names now use underscores.
 	 */
 	@Experimental
-	public static String slugifyWithEmoji(@Nullable String input) {
-		return slugify(input == null ? null : input.replace("❤", " heart "));
+	public static String slugifyWithEmoji(@Nullable CharSequence input) {
+		return slugify(input == null ? null : input.toString().replace("❤", " red_heart "));
 	}
 }
