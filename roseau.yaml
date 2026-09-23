@@ -1,0 +1,8 @@
+# What tiny-slug considers its supported API: everything public, except
+# the internal package and anything annotated @Experimental.
+common:
+  excludes:
+    names:
+      - com\.example\.slug\.internal\..*
+    annotations:
+      - name: com.example.slug.Experimental

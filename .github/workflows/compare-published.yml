@@ -1,0 +1,41 @@
+name: Compare published versions
+
+# Manually compare any two versions published on Maven Central.
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: "Baseline Maven coordinates"
+        default: "org.apache.commons:commons-lang3:3.0"
+      current:
+        description: "Current Maven coordinates"
+        default: "org.apache.commons:commons-lang3:3.17.0"
+      compatibility:
+        description: "Breaking changes to report"
+        type: choice
+        options: [all, binary, source]
+        default: all
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alien-tools/roseau-action@v2
+        id: roseau
+        with:
+          baseline: ${{ inputs.baseline }}
+          current: ${{ inputs.current }}
+          compatibility: ${{ inputs.compatibility }}
+          reports: HTML=roseau-reports/report.html
+          fail-on-breaking-changes: false
+          roseau-version: latest
+
+      - env:
+          COUNT: ${{ steps.roseau.outputs.breaking-change-count }}
+          JSON_REPORT: ${{ steps.roseau.outputs.json-report }}
+        run: |
+          echo "$COUNT breaking change(s); most frequent kinds:"
+          jq -r '.[].kind' "$JSON_REPORT" | sort | uniq -c | sort -rn | head
