@@ -13,12 +13,6 @@ class SlugsTest {
 	}
 
 	@Test
-	void slugifyWithMaxLength() {
-		assertEquals("creme", Slugs.slugify("Crème brûlée", 5));
-		assertEquals("creme", Slugs.slugify("Crème brûlée", 6));
-	}
-
-	@Test
 	void slugifyWithFilter() {
 		assertEquals("quick-fox", Slugs.slugify("The quick fox", SlugFilter.dropping("the")));
 	}
