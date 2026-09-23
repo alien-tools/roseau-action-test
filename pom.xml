@@ -6,7 +6,7 @@
 
   <groupId>com.example</groupId>
   <artifactId>tiny-slug</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <name>tiny-slug</name>
   <description>Turn arbitrary text into URL-friendly slugs</description>
 
