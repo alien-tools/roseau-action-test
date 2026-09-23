@@ -8,8 +8,8 @@ change. Opening a pull request for each branch covers every feature of the actio
 
 | Workflow | Trigger | What it exercises |
 |---|---|---|
-| [`api.yml`](.github/workflows/api.yml), job **Breaking changes (sources)** | PRs, pushes to `main` | Source directories, `v1-pom`/`v2-pom`, `config`, `ignored`, extra `reports`, PR comment, job summary, artifact upload, failing on PRs, report-only on `main`, outputs |
-| [`api.yml`](.github/workflows/api.yml), job **Binary compatibility (JARs)** | PRs, pushes to `main` | JAR inputs built by Maven, `compatibility: binary`, custom `report-dir`, `upload-reports: false`, `comment: false` |
+| [`api.yml`](.github/workflows/api.yml), job **Breaking changes (sources)** | PRs, pushes to `main` | Source directories, `v1-pom`/`v2-pom`, `config`, `ignored`, extra `reports`, PR comment, inline comments, annotations, job summary, artifact upload, failing on PRs, report-only on `main`, outputs |
+| [`api.yml`](.github/workflows/api.yml), job **Binary compatibility (JARs)** | PRs, pushes to `main` | JAR inputs built by Maven, `compatibility: binary`, custom `report-dir`, `upload-reports: false`, `comment: false`, `annotations: false` |
 | [`compare-published.yml`](.github/workflows/compare-published.yml) | Manual | Maven coordinates, `roseau-version: latest`, `compatibility` choices, JSON report output |
 
 On pull requests, the baseline is the PR's base commit. On `main`, it is the latest release tag (`v1.0.0`).
@@ -30,7 +30,7 @@ On pull requests, the baseline is the PR's base commit. On `main`, it is the lat
 
    ```bash
    git push origin 'refs/heads/demo/*:refs/heads/demo/*'
-   for b in add-separator remove-max-length checked-exception internal-change accepted-break; do
+   for b in add-separator remove-max-length checked-exception internal-change accepted-break annotation-member major-rework; do
      gh pr create --base main --head "demo/$b" --fill
    done
    ```
@@ -46,12 +46,24 @@ If Actions are restricted in your organization, allow `alien-tools/roseau-action
 | `demo/checked-exception` | `slugify(String, int)` now throws a checked exception | ❌ 1 | ✅ | Table with `EXECUTABLE_NOW_THROWS_CHECKED_EXCEPTION`, binary-compatible |
 | `demo/internal-change` | Breaks `internal.Ascii` and an `@Experimental` method | ✅ | ✅ | "no breaking changes detected" (hidden by `roseau.yaml`) |
 | `demo/accepted-break` | Renames `SlugFilter.dropping`, listed in `accepted-breaks.csv` | ✅ | ✅ | "no breaking changes detected" (hidden by `ignored`) |
+| `demo/annotation-member` | Adds `since()` without default to `@Experimental` | ❌ 1 | ✅ | Table with `ANNOTATION_NEW_METHOD_WITHOUT_DEFAULT`, source-breaking only |
+| `demo/major-rework` | Deletes `@Experimental`, removes `SlugFilter.identity()`, changes a return type | ❌ 4 | ❌ 3 | Table with 4 breaking changes |
+
+Each breaking change is also marked on the lines of the diff, in the "Files changed" tab, as an annotation and an
+inline review comment:
+
+| PR | Marked line |
+|---|---|
+| `demo/remove-max-length` | The deleted `slugify(String, int)` declaration (red, old side) |
+| `demo/checked-exception` | The `slugify(String, int)` declaration: old side with Roseau v0.7.0, new side once Roseau reports new locations |
+| `demo/annotation-member` | The `@interface Experimental` declaration with Roseau v0.7.0; the added `since()` line once Roseau reports new locations |
+| `demo/major-rework` | The deleted `Experimental.java` (inline comment only, since the file no longer exists), the deleted `identity()`, and one grouped comment on the `slugify(String, int)` declaration |
 
 On each PR, also check that:
 
 - the **Summary** tab of the sources job shows the Markdown report,
 - the run has one `roseau-reports` artifact with `report.json`, `report.md`, `report.html` and `report.csv`,
-- each PR has exactly one Roseau comment.
+- each PR has exactly one Roseau comment, which ends with "N of N breaking change(s) are marked on the lines of this diff".
 
 ## Follow-up scenarios
 
@@ -65,7 +77,9 @@ tail -n +2 /tmp/roseau-reports/report.csv >> .roseau/accepted-breaks.csv
 git commit -am "Accept removal of slugify(String, int)" && git push
 ```
 
-**Expect:** both jobs turn green, and the existing comment is edited to "no breaking changes detected" (no new comment).
+**Expect:** both jobs turn green, the existing comment is edited to "no breaking changes detected" (no new comment), and
+the inline comment on the removed method is deleted. Pushing a commit that does not change the breaking changes keeps
+the existing inline comments instead of posting new ones.
 
 **Report-only on `main`.** Merge `demo/add-separator`, `demo/internal-change` and `demo/accepted-break`. Each push to
 `main` passes, with the notice "No breaking changes since v1.0.0". Then merge `demo/checked-exception`, even though
@@ -73,7 +87,8 @@ its check fails. **Expect:** the push to `main` still passes, but shows the warn
 v1.0.0: the next release must be a major version".
 
 **Fork pull requests.** Open a PR from a fork, for example from a second account. **Expect:** the check and the job
-summary still run; the comment step only logs a warning, because the fork's token cannot write comments.
+summary still run, and breaking changes are still annotated in the diff; the comment steps only log a warning,
+because the fork's token cannot write comments.
 
 **Maven coordinates.** Run *Compare published versions* from the Actions tab (or
 `gh workflow run compare-published.yml`). **Expect:** 8 breaking changes for commons-lang3 3.0 → 3.17.0 with
