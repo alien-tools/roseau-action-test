@@ -17,8 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: write
-      pull-requests: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
         with:
@@ -33,7 +32,7 @@ jobs:
           echo "ref=$ref" >> "$GITHUB_OUTPUT"
           git worktree add "$RUNNER_TEMP/baseline" "$ref"
 
-      - uses: alien-tools/roseau-action@v2
+      - uses: alien-tools/roseau-action@inline-annotations
         id: roseau
         with:
           baseline: ${{ runner.temp }}/baseline/src/main/java
@@ -87,7 +86,7 @@ jobs:
       - name: Build baseline
         run: mvn --batch-mode -DskipTests -f "$RUNNER_TEMP/baseline/pom.xml" package
 
-      - uses: alien-tools/roseau-action@v2
+      - uses: alien-tools/roseau-action@inline-annotations
         with:
           baseline: ${{ runner.temp }}/baseline/target/tiny-slug.jar
           current: target/tiny-slug.jar
@@ -98,6 +97,8 @@ jobs:
           ignored: .roseau/accepted-breaks.csv
           report-dir: roseau-binary-reports
           upload-reports: false
+          # The sources job already comments and annotates the pull request
           comment: false
+          annotations: false
           fail-on-breaking-changes: ${{ github.event_name == 'pull_request' }}
           roseau-version: v0.7.0
