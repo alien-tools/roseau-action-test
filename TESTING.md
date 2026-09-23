@@ -49,15 +49,15 @@ If Actions are restricted in your organization, allow `alien-tools/roseau-action
 | `demo/annotation-member` | Adds `since()` without default to `@Experimental` | ❌ 1 | ✅ | Table with `ANNOTATION_NEW_METHOD_WITHOUT_DEFAULT`, source-breaking only |
 | `demo/major-rework` | Deletes `@Experimental`, removes `SlugFilter.identity()`, changes a return type | ❌ 4 | ❌ 3 | Table with 4 breaking changes |
 
-Each breaking change is also marked on the lines of the diff, in the "Files changed" tab, as an annotation and an
-inline review comment:
+Each breaking change is also marked once on the lines of the diff, in the "Files changed" tab, with an inline review
+comment from `github-actions` (and no annotation, since the comment already marks it):
 
 | PR | Marked line |
 |---|---|
 | `demo/remove-max-length` | The deleted `slugify(String, int)` declaration (red, old side) |
 | `demo/checked-exception` | The `slugify(String, int)` declaration: old side with Roseau v0.7.0, new side once Roseau reports new locations |
 | `demo/annotation-member` | The `@interface Experimental` declaration with Roseau v0.7.0; the added `since()` line once Roseau reports new locations |
-| `demo/major-rework` | The deleted `Experimental.java` (inline comment only, since the file no longer exists), the deleted `identity()`, and one grouped comment on the `slugify(String, int)` declaration |
+| `demo/major-rework` | The deleted `Experimental.java`, the deleted `identity()`, and one grouped comment on the `slugify(String, int)` declaration |
 
 On each PR, also check that:
 
@@ -87,8 +87,9 @@ its check fails. **Expect:** the push to `main` still passes, but shows the warn
 v1.0.0: the next release must be a major version".
 
 **Fork pull requests.** Open a PR from a fork, for example from a second account. **Expect:** the check and the job
-summary still run, and breaking changes are still annotated in the diff; the comment steps only log a warning,
-because the fork's token cannot write comments.
+summary still run; the comment steps only log a warning, because the fork's token cannot write comments. Instead of
+inline comments, each breaking change is marked with an annotation from *API compatibility / Breaking changes
+(sources)*, on the new side of the diff.
 
 **Maven coordinates.** Run *Compare published versions* from the Actions tab (or
 `gh workflow run compare-published.yml`). **Expect:** 8 breaking changes for commons-lang3 3.0 → 3.17.0 with
