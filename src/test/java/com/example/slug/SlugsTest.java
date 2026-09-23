@@ -13,7 +13,7 @@ class SlugsTest {
 	}
 
 	@Test
-	void slugifyWithMaxLength() {
+	void slugifyWithMaxLength() throws SlugException {
 		assertEquals("creme", Slugs.slugify("Crème brûlée", 5));
 		assertEquals("creme", Slugs.slugify("Crème brûlée", 6));
 	}

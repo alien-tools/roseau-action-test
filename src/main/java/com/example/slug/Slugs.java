@@ -24,10 +24,12 @@ public final class Slugs {
 
 	/**
 	 * Returns the slug of {@code input}, truncated to at most {@code maxLength} characters.
+	 *
+	 * @throws SlugException if {@code maxLength} is negative
 	 */
-	public static String slugify(@Nullable String input, int maxLength) {
+	public static String slugify(@Nullable String input, int maxLength) throws SlugException {
 		if (maxLength < 0) {
-			throw new IllegalArgumentException("maxLength must be >= 0");
+			throw new SlugException("maxLength must be >= 0");
 		}
 		String slug = slugify(input);
 		if (slug.length() <= maxLength) {
