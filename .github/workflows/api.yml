@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: alien-tools/roseau-action@inline-annotations
+      - uses: alien-tools/roseau-action@v2
         with:
           current: src/main/java
           pom: pom.xml
