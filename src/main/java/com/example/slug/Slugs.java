@@ -23,21 +23,6 @@ public final class Slugs {
 	}
 
 	/**
-	 * Returns the slug of {@code input}, truncated to at most {@code maxLength} characters.
-	 */
-	public static String slugify(@Nullable String input, int maxLength) {
-		if (maxLength < 0) {
-			throw new IllegalArgumentException("maxLength must be >= 0");
-		}
-		String slug = slugify(input);
-		if (slug.length() <= maxLength) {
-			return slug;
-		}
-		String truncated = slug.substring(0, maxLength);
-		return truncated.endsWith("-") ? truncated.substring(0, truncated.length() - 1) : truncated;
-	}
-
-	/**
 	 * Returns the slug of {@code input}, after applying {@code filter} to each word.
 	 */
 	public static String slugify(@Nullable String input, SlugFilter filter) {
