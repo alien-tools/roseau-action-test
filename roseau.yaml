@@ -4,5 +4,3 @@ common:
   excludes:
     names:
       - com\.example\.slug\.internal\..*
-    annotations:
-      - name: com.example.slug.Experimental
