@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: alien-tools/roseau-action@report-only-warning
+      - uses: alien-tools/roseau-action@main
         id: roseau
         with:
           current: src/main/java
