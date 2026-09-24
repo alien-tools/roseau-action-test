@@ -19,6 +19,11 @@ class SlugsTest {
 	}
 
 	@Test
+	void slugifyWithSeparator() {
+		assertEquals("hello_world", Slugs.slugify("Hello, World!", '_'));
+	}
+
+	@Test
 	void slugifyWithFilter() {
 		assertEquals("quick-fox", Slugs.slugify("The quick fox", SlugFilter.dropping("the")));
 	}
