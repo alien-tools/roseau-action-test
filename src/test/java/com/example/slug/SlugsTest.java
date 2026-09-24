@@ -20,6 +20,6 @@ class SlugsTest {
 
 	@Test
 	void slugifyWithFilter() {
-		assertEquals("quick-fox", Slugs.slugify("The quick fox", SlugFilter.dropping("the")));
+		assertEquals("quick-fox", Slugs.slugify("The quick fox", SlugFilter.stopWords("the")));
 	}
 }

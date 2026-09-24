@@ -5,7 +5,7 @@ Turn arbitrary text into URL-friendly slugs.
 ```java
 Slugs.slugify("Hello, World!");                                  // "hello-world"
 Slugs.slugify("Crème brûlée", 5);                                // "creme"
-Slugs.slugify("The quick fox", SlugFilter.dropping("the"));      // "quick-fox"
+Slugs.slugify("The quick fox", SlugFilter.stopWords("the"));      // "quick-fox"
 ```
 
 ## API compatibility
