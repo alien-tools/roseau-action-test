@@ -19,13 +19,13 @@ public final class Slugs {
 	 * Returns the slug of {@code input}, or an empty string if {@code input} is {@code null}.
 	 */
 	public static String slugify(@Nullable String input) {
-		return slugify(input, SlugFilter.identity());
+		return slugify(input, word -> word);
 	}
 
 	/**
 	 * Returns the slug of {@code input}, truncated to at most {@code maxLength} characters.
 	 */
-	public static String slugify(@Nullable String input, int maxLength) {
+	public static CharSequence slugify(@Nullable String input, int maxLength) {
 		if (maxLength < 0) {
 			throw new IllegalArgumentException("maxLength must be >= 0");
 		}
@@ -60,7 +60,6 @@ public final class Slugs {
 	/**
 	 * Returns a slug for {@code input} that keeps emoji as their names. Not stable yet.
 	 */
-	@Experimental
 	public static String slugifyWithEmoji(@Nullable String input) {
 		return slugify(input == null ? null : input.replace("❤", " heart "));
 	}

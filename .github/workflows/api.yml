@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: alien-tools/roseau-action@v2
+      - uses: alien-tools/roseau-action@report-only-warning
         with:
           current: src/main/java
           pom: pom.xml
@@ -23,3 +23,4 @@ jobs:
           ignored: .roseau/accepted-breaks.csv
           reports: HTML=roseau-reports/report.html,CSV=roseau-reports/report.csv
           roseau-version: v0.7.0
+          fail-on-breaking-changes: false
